@@ -15,8 +15,8 @@ const quickSetup = async () => {
     console.log("🔗 Connected to MongoDB");
 
     // Create admin user
-    const adminEmail = "neeleshgadi@gmail.com";
-    const adminPassword = "Neelesh@2003";
+    const adminEmail = "admin@example.com";
+    const adminPassword = "Admin123456";
 
     let adminUser = await User.findOne({ email: adminEmail });
 
@@ -24,8 +24,8 @@ const quickSetup = async () => {
       adminUser = new User({
         email: adminEmail,
         password: adminPassword,
-        firstName: "Neelesh",
-        lastName: "Gadi",
+        firstName: "Admin",
+        lastName: "User",
         isAdmin: true,
       });
       await adminUser.save();

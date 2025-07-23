@@ -170,10 +170,7 @@ black-market/
 
 ## 👨‍💼 Admin Features
 
-Access the admin panel at `/admin` with admin credentials:
-
-- **Email**: neeleshgadi@gmail.com
-- **Password**: Neelesh@2003
+Access the admin panel at `/admin` with admin credentials (contact repository owner for access).
 
 Admin capabilities:
 

@@ -4,8 +4,8 @@ const axios = require('axios');
 
 const BASE_URL = 'http://localhost:5000/api';
 const ADMIN_USER = {
-  email: 'neeleshgadi@gmail.com',
-  password: 'Neelesh@2003'
+  email: 'admin@example.com',
+  password: 'Admin123456'
 };
 
 async function main() {

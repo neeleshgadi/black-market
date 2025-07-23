@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User.js').default || require('../models/User.js');
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/black_market';
-const EMAIL = 'neeleshgadi@gmail.com';
+const EMAIL = 'admin@example.com';
 
 async function main() {
   await mongoose.connect(MONGO_URI);

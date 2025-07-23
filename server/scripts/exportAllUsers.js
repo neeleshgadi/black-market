@@ -55,7 +55,7 @@ const exportData = async () => {
         adminUser;
       adminUserData = {
         ...cleanAdmin,
-        password: "Neelesh@2003", // Using original seed password
+        password: "Admin123456", // Using original seed password
       };
       console.log(`Found admin user: ${adminUser.email}`);
     }
@@ -163,7 +163,7 @@ export const seedDatabase = async () => {
     console.log(\`📊 Summary:\`);
     console.log(\`   - \${aliens.length} aliens created\`);
     console.log(\`   - \${1 + 1 + additionalUsers.length} users preserved/created\`);
-    console.log(\`   - Admin login: \${adminUserData.email} / Neelesh@2003\`);
+    console.log(\`   - Admin login: \${adminUserData.email} / Admin123456\`);
     console.log(\`   - Test login: \${testUserData.email} / test123456\`);
     if (additionalUsers.length > 0) {
       console.log(\`   - Additional users: \${additionalUsers.length}\`);

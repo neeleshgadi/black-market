@@ -3,8 +3,8 @@ import axios from "axios";
 // --- CONFIG ---
 const BASE_URL = "http://localhost:5000/api";
 const TEST_USER = {
-  email: "neeleshgadi@gmail.com",
-  password: "Neelesh@2003",
+  email: "admin@example.com",
+  password: "Admin123456",
 };
 
 async function main() {

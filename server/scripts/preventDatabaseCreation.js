@@ -32,17 +32,17 @@ const preventDatabaseCreation = async () => {
 
     // Check for admin user
     const User = (await import("../models/User.js")).default;
-    const adminUser = await User.findOne({ email: "neeleshgadi@gmail.com" });
+    const adminUser = await User.findOne({ email: "admin@example.com" });
 
     if (adminUser) {
       console.log("✅ Admin user found in correct database");
     } else {
       console.log("⚠️  Admin user not found, creating...");
       const newAdmin = new User({
-        email: "neeleshgadi@gmail.com",
-        password: "Neelesh@2003",
-        firstName: "Neelesh",
-        lastName: "Gadi",
+        email: "admin@example.com",
+        password: "Admin123456",
+        firstName: "Admin",
+        lastName: "User",
         isAdmin: true,
       });
       await newAdmin.save();

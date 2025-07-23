@@ -13,7 +13,7 @@ const checkUser = async () => {
     );
     console.log("Connected to MongoDB");
 
-    const adminEmail = "neeleshgadi@gmail.com";
+    const adminEmail = "admin@example.com";
 
     // Find the user
     const user = await User.findOne({ email: adminEmail }).select("+password");
@@ -28,7 +28,7 @@ const checkUser = async () => {
       console.log("📅 Updated:", user.updatedAt);
 
       // Test password comparison
-      const testPassword = "Neelesh@2003";
+      const testPassword = "Admin123456";
       const isValid = await user.comparePassword(testPassword);
       console.log("🔐 Password test:", isValid ? "VALID" : "INVALID");
     } else {

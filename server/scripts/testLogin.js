@@ -19,8 +19,8 @@ const testLogin = async () => {
     // Mock request and response objects
     const req = {
       body: {
-        email: "neeleshgadi@gmail.com",
-        password: "Neelesh@2003",
+        email: "admin@example.com",
+        password: "Admin123456",
       },
     };
 

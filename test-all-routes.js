@@ -11,10 +11,10 @@ const TEST_USER = {
 };
 
 const TEST_ADMIN = {
-  email: "neeleshgadi@gmail.com",
-  password: "Neelesh@2003",
-  firstName: "Neelesh",
-  lastName: "Gadi",
+  email: "admin@example.com",
+  password: "Admin123456",
+  firstName: "Admin",
+  lastName: "User",
 };
 
 let userToken = "";

@@ -57,7 +57,7 @@ const exportData = async () => {
       if (user.isAdmin && !adminUserData) {
         adminUserData = {
           ...cleanUser,
-          password: "Neelesh@2003", // Using original seed password
+          password: "Admin123456", // Using original seed password
         };
       } else if (!user.isAdmin && !testUserData) {
         testUserData = {
@@ -122,7 +122,7 @@ export const seedDatabase = async () => {
     console.log(\`📊 Summary:\`);
     console.log(\`   - \${aliens.length} aliens created\`);
     console.log(\`   - Users preserved/created\`);
-    console.log(\`   - Admin login: \${adminUserData.email} / Neelesh@2003\`);
+    console.log(\`   - Admin login: \${adminUserData.email} / Admin123456\`);
     console.log(\`   - Test login: \${testUserData.email} / test123456\`);
 
     return {

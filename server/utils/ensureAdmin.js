@@ -3,8 +3,8 @@ import logger from "./logger.js";
 
 export const ensureAdminExists = async () => {
   try {
-    const adminEmail = "neeleshgadi@gmail.com";
-    const adminPassword = "Neelesh@2003";
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@blackmarket.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "admin123456";
 
     // Check if admin user exists
     let adminUser = await User.findOne({ email: adminEmail });
@@ -14,8 +14,8 @@ export const ensureAdminExists = async () => {
       adminUser = new User({
         email: adminEmail,
         password: adminPassword,
-        firstName: "Neelesh",
-        lastName: "Gadi",
+        firstName: process.env.ADMIN_FIRST_NAME || "Admin",
+        lastName: process.env.ADMIN_LAST_NAME || "User",
         isAdmin: true,
       });
 

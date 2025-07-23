@@ -13,8 +13,8 @@ const createAdminUser = async () => {
     );
     console.log("Connected to MongoDB");
 
-    const adminEmail = "neeleshgadi@gmail.com";
-    const adminPassword = "Neelesh@2003";
+    const adminEmail = "admin@example.com";
+    const adminPassword = "Admin123456";
 
     // Check if admin user already exists
     const existingUser = await User.findOne({ email: adminEmail });
@@ -32,8 +32,8 @@ const createAdminUser = async () => {
       const adminUser = new User({
         email: adminEmail,
         password: adminPassword,
-        firstName: "Neelesh",
-        lastName: "Gadi",
+        firstName: "Admin",
+        lastName: "User",
         isAdmin: true,
       });
 

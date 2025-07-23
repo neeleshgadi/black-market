@@ -16,7 +16,7 @@ const testConnection = async () => {
     console.log(`🍃 MongoDB Connected: ${conn.connection.host}`);
     console.log(`📊 Database Name: ${conn.connection.name}`);
 
-    const adminEmail = "neeleshgadi@gmail.com";
+    const adminEmail = "admin@example.com";
 
     // Find the user with the same query as the login controller
     const user = await User.findOne({ email: adminEmail }).select("+password");
@@ -29,7 +29,7 @@ const testConnection = async () => {
       console.log("🔑 Password hash:", user.password ? "Present" : "Missing");
 
       // Test password comparison exactly like the controller does
-      const testPassword = "Neelesh@2003";
+      const testPassword = "Admin123456";
       const isValid = await user.comparePassword(testPassword);
       console.log("🔐 Password test:", isValid ? "VALID" : "INVALID");
 

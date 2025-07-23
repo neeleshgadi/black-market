@@ -140,8 +140,8 @@
 
 ### Admin Credentials
 
-- **Email:** neeleshgadi@gmail.com
-- **Password:** Neelesh@2003
+- **Email:** admin@example.com
+- **Password:** Admin123456
 - **Role:** Admin ✅
 - **Access Level:** Full admin privileges
 
