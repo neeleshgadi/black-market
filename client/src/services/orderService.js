@@ -37,6 +37,37 @@ const orderService = {
       throw error;
     }
   },
+
+  // Get order tracking information
+  getOrderTracking: async (orderId) => {
+    try {
+      const response = await api.get(`/orders/${orderId}/tracking`);
+      return response.data;
+    } catch (error) {
+      console.error(`Get order tracking ${orderId} error:`, error);
+      throw error;
+    }
+  },
+
+  // Cancel an order
+  cancelOrder: async (orderId) => {
+    try {
+      const response = await api.put(`/orders/${orderId}/cancel`);
+      return response.data;
+    } catch (error) {
+      console.error(`Cancel order ${orderId} error:`, error);
+      throw error;
+    }
+  },
 };
+
+// Export individual functions for named imports
+export const {
+  createOrder,
+  getUserOrders,
+  getOrderById,
+  getOrderTracking,
+  cancelOrder,
+} = orderService;
 
 export default orderService;
