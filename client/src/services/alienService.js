@@ -3,9 +3,22 @@ import api from "./api.js";
 // Get all aliens with filtering and pagination
 export const getAliens = async (params = {}) => {
   try {
+    // Ensure page is a number
+    if (params.page) {
+      params.page = Number(params.page);
+    }
+
+    // Ensure limit is a number
+    if (params.limit) {
+      params.limit = Number(params.limit);
+    }
+
+    console.log("Fetching aliens with params:", params);
     const response = await api.get("/aliens", { params });
+    console.log("API response:", response.data);
     return response.data;
   } catch (error) {
+    console.error("Error in getAliens:", error);
     throw error.response?.data || error;
   }
 };

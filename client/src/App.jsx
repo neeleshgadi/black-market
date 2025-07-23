@@ -32,6 +32,7 @@ const FixedCartPage = lazy(() => import("./pages/FixedCartPage"));
 const TestCartPage = lazy(() => import("./pages/TestCartPage"));
 const DirectDbCartTestPage = lazy(() => import("./pages/DirectDbCartTestPage"));
 const ImageDebugPage = lazy(() => import("./pages/ImageDebugPage"));
+const PaginationTestPage = lazy(() => import("./pages/PaginationTestPage"));
 
 // Lazy load admin components
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
@@ -85,6 +86,10 @@ function App() {
                           <Route
                             path="/image-debug"
                             element={<ImageDebugPage />}
+                          />
+                          <Route
+                            path="/pagination-test"
+                            element={<PaginationTestPage />}
                           />
                           <Route path="/login" element={<LoginPage />} />
                           <Route

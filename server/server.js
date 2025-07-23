@@ -171,7 +171,7 @@ app.use(
 
 // Health check endpoint
 app.get("/api/health", async (req, res) => {
-  console.log('[HEALTH ENDPOINT] /api/health was called');
+  console.log("[HEALTH ENDPOINT] /api/health was called");
   const healthStatus = errorMonitor.getHealthStatus();
 
   // Add database info
@@ -219,7 +219,9 @@ app.use("/api/admin", adminRoutes);
 
 // Handle 404 routes
 app.use("*", (req, res, next) => {
-  console.log(`[404 HANDLER] Falling through to 404 for ${req.method} ${req.originalUrl}`);
+  console.log(
+    `[404 HANDLER] Falling through to 404 for ${req.method} ${req.originalUrl}`
+  );
   return notFoundHandler(req, res, next);
 });
 
@@ -230,17 +232,33 @@ const PORT = process.env.PORT || 5000;
 
 // Only start server if not in test environment
 import fs from "fs";
-const logStream = fs.createWriteStream(path.join(__dirname, "console.log"), { flags: "a" });
-console.log(`[TOP OF SERVER.JS] server.js loaded at ${new Date().toISOString()}`);
+const logStream = fs.createWriteStream(path.join(__dirname, "console.log"), {
+  flags: "a",
+});
+console.log(
+  `[TOP OF SERVER.JS] server.js loaded at ${new Date().toISOString()}`
+);
 const origLog = console.log;
 const origErr = console.error;
 console.log = (...args) => {
   origLog(...args);
-  logStream.write("[LOG] " + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : a)).join(" ") + "\n");
+  logStream.write(
+    "[LOG] " +
+      args
+        .map((a) => (typeof a === "object" ? JSON.stringify(a) : a))
+        .join(" ") +
+      "\n"
+  );
 };
 console.error = (...args) => {
   origErr(...args);
-  logStream.write("[ERROR] " + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : a)).join(" ") + "\n");
+  logStream.write(
+    "[ERROR] " +
+      args
+        .map((a) => (typeof a === "object" ? JSON.stringify(a) : a))
+        .join(" ") +
+      "\n"
+  );
 };
 
 if (process.env.NODE_ENV !== "test") {

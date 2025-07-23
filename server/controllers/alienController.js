@@ -5,6 +5,8 @@ import { validationResult } from "express-validator";
 export const getAliens = async (req, res) => {
   try {
     console.log("🔍 Getting aliens - query params:", req.query);
+    console.log("🔍 Raw page param:", req.query.page);
+    console.log("🔍 Raw limit param:", req.query.limit);
 
     const {
       page = 1,
@@ -69,6 +71,11 @@ export const getAliens = async (req, res) => {
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const skip = (pageNum - 1) * limitNum;
+
+    console.log("📄 Pagination details:");
+    console.log("  - Page number:", pageNum);
+    console.log("  - Limit:", limitNum);
+    console.log("  - Skip:", skip);
 
     // Sort options
     const sortOptions = {};
