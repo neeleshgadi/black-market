@@ -2,10 +2,22 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    // Force the correct database name to prevent any confusion
-    const mongoURI = "mongodb://localhost:27017/black_market";
+    // Use environment variable for MongoDB URI
+    const mongoURI = process.env.MONGODB_URI; // <--- REMOVED THE FALLBACK
 
-    const conn = await mongoose.connect(mongoURI);
+    // Add a check to ensure the URI is actually set
+    if (!mongoURI) {
+      const errorMessage =
+        "❌ MONGODB_URI environment variable is not set! Cannot connect to MongoDB.";
+      console.error(errorMessage);
+      throw new Error(errorMessage); // Throw an error to stop execution
+    }
+
+    // You can remove useNewUrlParser and useUnifiedTopology for newer Mongoose versions if they are still there
+    const conn = await mongoose.connect(mongoURI, {
+      serverSelectionTimeoutMS: 30000, // Keep trying to connect for 30 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+    });
 
     console.log(`🍃 MongoDB Connected: ${conn.connection.host}`);
 
