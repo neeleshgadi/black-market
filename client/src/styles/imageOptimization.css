@@ -1,0 +1,21 @@
+/* Image optimization styles */
+
+/* Improve image rendering quality */
+img {
+  image-rendering: -webkit-optimize-contrast; /* For Chrome */
+  image-rendering: crisp-edges; /* For Firefox */
+  -ms-interpolation-mode: nearest-neighbor; /* For IE */
+}
+
+/* Prevent blurry images during transitions */
+.carousel-image {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Sharpen images */
+.sharp-image {
+  filter: contrast(1.05);
+  image-rendering: -webkit-optimize-contrast;
+}
