@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import AlienCarousel from "../components/alien/AlienCarousel";
 
 const HomePage = () => {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden -z-10">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse delay-500"></div>
@@ -147,8 +150,8 @@ const HomePage = () => {
           </div>
 
           {/* Call to Action Section */}
-          <div className="text-center px-4">
-            <div className="card-hover max-w-2xl mx-auto">
+          <div className="text-center px-4 relative z-10">
+            <div className="card max-w-2xl mx-auto">
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
                 Ready to Start Your Collection?
               </h2>
@@ -156,13 +159,32 @@ const HomePage = () => {
                 Join thousands of collectors exploring the galaxy's most
                 fascinating beings. Start your journey into the unknown today.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                <Link to="/aliens" className="btn-primary focus-visible">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center relative z-20">
+                <Link
+                  to="/aliens"
+                  className="btn-primary focus-visible inline-block text-center cursor-pointer"
+                  style={{ pointerEvents: "auto" }}
+                >
                   🔍 Browse Collection
                 </Link>
-                <Link to="/register" className="btn-secondary focus-visible">
-                  🚀 Create Account
-                </Link>
+                {!isAuthenticated && (
+                  <Link
+                    to="/register"
+                    className="btn-secondary focus-visible inline-block text-center cursor-pointer"
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    🚀 Create Account
+                  </Link>
+                )}
+                {isAuthenticated && (
+                  <Link
+                    to="/profile"
+                    className="btn-secondary focus-visible inline-block text-center cursor-pointer"
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    👤 My Profile
+                  </Link>
+                )}
               </div>
             </div>
           </div>
