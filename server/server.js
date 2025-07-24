@@ -7,6 +7,7 @@ import session from "express-session";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import connectDB from "./config/database.js";
+import redisService from "./config/redis.js";
 import {
   globalErrorHandler,
   notFoundHandler,
@@ -24,11 +25,17 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Connect to MongoDB
+// Connect to MongoDB and Redis
 connectDB().then(async () => {
   // Ensure admin user exists after database connection
   const { ensureAdminExists } = await import("./utils/ensureAdmin.js");
   await ensureAdminExists();
+});
+
+// Connect to Redis
+redisService.connect().catch((error) => {
+  logger.error("Failed to connect to Redis:", error);
+  // App continues without Redis - caching will be disabled
 });
 
 // Security middleware
@@ -182,6 +189,12 @@ app.get("/api/health", async (req, res) => {
     port: mongoose.connection.port,
   };
 
+  // Add Redis info
+  const redisInfo = {
+    connected: redisService.isReady(),
+    status: redisService.isReady() ? "connected" : "disconnected",
+  };
+
   // Quick alien count
   let alienCount = 0;
   try {
@@ -195,6 +208,7 @@ app.get("/api/health", async (req, res) => {
     message: "Black Market API is running",
     health: healthStatus,
     database: dbInfo,
+    redis: redisInfo,
     alienCount,
     timestamp: new Date().toISOString(),
   });

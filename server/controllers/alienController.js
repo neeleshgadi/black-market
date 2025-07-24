@@ -1,5 +1,6 @@
 import Alien from "../models/Alien.js";
 import { validationResult } from "express-validator";
+import { invalidateCache } from "../middleware/cache.js";
 
 // Get all aliens with search, filtering, and pagination
 export const getAliens = async (req, res) => {
@@ -249,6 +250,9 @@ export const createAlien = async (req, res) => {
     const alien = new Alien(alienData);
     await alien.save();
 
+    // Invalidate alien caches
+    await invalidateCache.aliens();
+
     res.status(201).json({
       success: true,
       data: alien,
@@ -320,6 +324,9 @@ export const updateAlien = async (req, res) => {
       });
     }
 
+    // Invalidate specific alien cache and related caches
+    await invalidateCache.alien(id);
+
     res.status(200).json({
       success: true,
       data: alien,
@@ -378,6 +385,9 @@ export const deleteAlien = async (req, res) => {
         },
       });
     }
+
+    // Invalidate specific alien cache and related caches
+    await invalidateCache.alien(id);
 
     res.status(200).json({
       success: true,

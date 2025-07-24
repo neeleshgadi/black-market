@@ -21,23 +21,47 @@ import {
   optionalUploadAlienImage,
   handleUploadError,
 } from "../middleware/upload.js";
+import {
+  alienListCache,
+  alienDetailCache,
+  cacheMiddleware,
+} from "../middleware/cache.js";
 
 const router = express.Router();
 
-// Public routes
-router.get("/", validateAlienSearch, handleValidationErrors, getAliens); // GET /api/aliens - Get all aliens with filtering/search/pagination
-router.get("/featured", getFeaturedAliens); // GET /api/aliens/featured - Get featured aliens
-router.get("/filter-options", getFilterOptions); // GET /api/aliens/filter-options - Get filter dropdown options
+// Public routes with caching
+router.get(
+  "/",
+  validateAlienSearch,
+  handleValidationErrors,
+  alienListCache,
+  getAliens
+); // GET /api/aliens - Get all aliens with filtering/search/pagination
+router.get(
+  "/featured",
+  cacheMiddleware({ ttl: 900, keyGenerator: () => "aliens:featured" }),
+  getFeaturedAliens
+); // GET /api/aliens/featured - Get featured aliens
+router.get(
+  "/filter-options",
+  cacheMiddleware({ ttl: 1800, keyGenerator: () => "aliens:filter-options" }),
+  getFilterOptions
+); // GET /api/aliens/filter-options - Get filter dropdown options
 router.get(
   "/:id",
   validateObjectId("id"),
   handleValidationErrors,
+  alienDetailCache,
   getAlienById
 ); // GET /api/aliens/:id - Get single alien
 router.get(
   "/:id/related",
   validateObjectId("id"),
   handleValidationErrors,
+  cacheMiddleware({
+    ttl: 600,
+    keyGenerator: (req) => `alien:related:${req.params.id}`,
+  }),
   getRelatedAliens
 ); // GET /api/aliens/:id/related - Get related aliens
 

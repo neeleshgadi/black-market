@@ -20,7 +20,8 @@
     "seed:production": "NODE_ENV=production node scripts/seed.js seed",
     "export:seed": "node scripts/exportCurrentData.js",
     "export:all": "node scripts/exportAllUsers.js",
-    "backup:uploads": "node scripts/backupUploads.js"
+    "backup:uploads": "node scripts/backupUploads.js",
+    "test:redis": "node scripts/testRedis.js"
   },
   "keywords": [
     "express",
@@ -44,6 +45,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1",
+    "redis": "^5.6.1",
     "uuid": "^11.1.0",
     "xss": "^1.0.15"
   },
