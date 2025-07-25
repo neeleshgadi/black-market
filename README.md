@@ -2,8 +2,13 @@
 
 A full-stack MERN application for trading alien collectibles from across the galaxy!
 
+## 🌐 Live Demo
+
+**🚀 [Visit the Live Site](https://black-market-frontend.onrender.com)**
+
 ![Project Status](https://img.shields.io/badge/status-active-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
+![Live Demo](https://img.shields.io/badge/demo-live-success)
 
 ## 🌟 Features
 
@@ -16,6 +21,7 @@ A full-stack MERN application for trading alien collectibles from across the gal
 - 📱 **Responsive Design** - Beautiful UI with Tailwind CSS
 - 🖼️ **Image Upload** - Upload and manage alien images
 - 🔍 **Search & Filter** - Find aliens by faction, planet, rarity, and more
+- ⚡ **Redis Caching** - High-performance caching for faster API responses
 
 ## 🚀 Tech Stack
 
@@ -31,6 +37,7 @@ A full-stack MERN application for trading alien collectibles from across the gal
 
 - **Node.js** with Express.js
 - **MongoDB** with Mongoose ODM
+- **Redis** for caching and session management
 - **JWT** for authentication
 - **Multer** for file uploads
 - **Helmet** for security
