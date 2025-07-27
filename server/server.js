@@ -136,12 +136,9 @@ app.use(
   })
 );
 
-import { fixedCartMiddleware } from "./middleware/fixedCartMiddleware.js";
-import { debugMiddleware } from "./middleware/debugMiddleware.js";
+// Removed old cart middleware imports - no longer needed
 
-// Cart debugging middlewares
-app.use(fixedCartMiddleware);
-app.use(debugMiddleware);
+// Cart debugging middlewares removed - no longer needed with simple cart system
 
 // Request logging middleware
 app.use(requestLogger);

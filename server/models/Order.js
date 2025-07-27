@@ -78,6 +78,41 @@ const orderSchema = new mongoose.Schema(
         message: "Order must contain at least one item",
       },
     },
+    subtotal: {
+      type: Number,
+      required: [true, "Subtotal is required"],
+      min: [0, "Subtotal cannot be negative"],
+      validate: {
+        validator: function (value) {
+          return Number.isFinite(value) && value >= 0;
+        },
+        message: "Subtotal must be a valid positive number",
+      },
+    },
+    tax: {
+      type: Number,
+      required: [true, "Tax amount is required"],
+      min: [0, "Tax cannot be negative"],
+      default: 0,
+      validate: {
+        validator: function (value) {
+          return Number.isFinite(value) && value >= 0;
+        },
+        message: "Tax must be a valid positive number",
+      },
+    },
+    shipping: {
+      type: Number,
+      required: [true, "Shipping amount is required"],
+      min: [0, "Shipping cannot be negative"],
+      default: 0,
+      validate: {
+        validator: function (value) {
+          return Number.isFinite(value) && value >= 0;
+        },
+        message: "Shipping must be a valid positive number",
+      },
+    },
     totalAmount: {
       type: Number,
       required: [true, "Total amount is required"],
@@ -145,9 +180,10 @@ orderSchema.index({ user: 1, createdAt: -1 });
 
 // Virtual for order total calculation
 orderSchema.virtual("calculatedTotal").get(function () {
-  return this.items.reduce((total, item) => {
+  const itemsTotal = this.items.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
+  return itemsTotal + (this.tax || 0) + (this.shipping || 0);
 });
 
 // Pre-save middleware to generate order number

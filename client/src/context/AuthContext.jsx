@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import authService from "../services/authService";
 
 // Initial state
@@ -158,32 +165,11 @@ export const AuthProvider = ({ children }) => {
         payload: { user, token },
       });
 
-      // --- Cart merge logic after login ---
-      try {
-        const simpleCartService = (await import("../services/simpleCartService")).default;
-        console.log("[AuthContext] Triggering cart merge after login...");
-        const mergeResult = await simpleCartService.mergeCart();
-        console.log("[AuthContext] Cart merge result:", mergeResult);
-      } catch (cartMergeError) {
-        console.error("Cart merge after login failed:", cartMergeError);
-      }
-      // --- Ensure cart is reloaded and ready before proceeding ---
-      try {
-        if (reloadCart) {
-          await reloadCart(); // Explicitly reload cart and wait for it
-        } else {
-          // fallback: dispatch event and wait
-          if (window && window.dispatchEvent) {
-            window.dispatchEvent(new Event("cart-updated"));
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-          }
-        }
-      } catch (e) {}
+      // Cart will automatically reload when user state changes in NewCartContext
       return { success: true };
-
-
     } catch (error) {
-      const errorMessage = error.response?.data?.error?.message || "Login failed";
+      const errorMessage =
+        error.response?.data?.error?.message || "Login failed";
       dispatch({
         type: AUTH_ACTIONS.LOGIN_FAILURE,
         payload: errorMessage,
@@ -205,7 +191,8 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: true };
     } catch (error) {
-      const errorMessage = error.response?.data?.error?.message || "Registration failed";
+      const errorMessage =
+        error.response?.data?.error?.message || "Registration failed";
       dispatch({
         type: AUTH_ACTIONS.REGISTER_FAILURE,
         payload: errorMessage,
@@ -224,7 +211,8 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: true };
     } catch (error) {
-      const errorMessage = error.response?.data?.error?.message || "Profile update failed";
+      const errorMessage =
+        error.response?.data?.error?.message || "Profile update failed";
       return { success: false, error: errorMessage };
     }
   }, []);
@@ -235,7 +223,8 @@ export const AuthProvider = ({ children }) => {
       await authService.changePassword(currentPassword, newPassword);
       return { success: true };
     } catch (error) {
-      const errorMessage = error.response?.data?.error?.message || "Password change failed";
+      const errorMessage =
+        error.response?.data?.error?.message || "Password change failed";
       return { success: false, error: errorMessage };
     }
   }, []);
@@ -256,25 +245,28 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [loadUser]);
 
-  const value = useMemo(() => ({
-    ...state,
-    login,
-    register,
-    logout,
-    updateProfile,
-    changePassword,
-    clearError,
-    loadUser,
-  }), [
-    state,
-    login,
-    register,
-    logout,
-    updateProfile,
-    changePassword,
-    clearError,
-    loadUser,
-  ]);
+  const value = useMemo(
+    () => ({
+      ...state,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      clearError,
+      loadUser,
+    }),
+    [
+      state,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      clearError,
+      loadUser,
+    ]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

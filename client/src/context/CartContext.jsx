@@ -5,56 +5,23 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import cartService from "../services/cartService";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_TO_CART":
-      const existingItem = state.items.find(
-        (item) => item.alien._id === action.payload.alien._id
-      );
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.alien._id === action.payload.alien._id
-              ? { ...item, quantity: item.quantity + action.payload.quantity }
-              : item
-          ),
-        };
-      }
+    case "LOAD_CART":
       return {
         ...state,
-        items: [...state.items, action.payload],
-      };
-
-    case "REMOVE_FROM_CART":
-      return {
-        ...state,
-        items: state.items.filter((item) => item.alien._id !== action.payload),
-      };
-
-    case "UPDATE_QUANTITY":
-      return {
-        ...state,
-        items: state.items.map((item) =>
-          item.alien._id === action.payload.alienId
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        ),
+        items: action.payload,
       };
 
     case "CLEAR_CART":
       return {
         ...state,
         items: [],
-      };
-
-    case "LOAD_CART":
-      return {
-        ...state,
-        items: action.payload,
       };
 
     default:
@@ -66,24 +33,24 @@ const initialState = {
   items: [],
 };
 
-// Import at the top level
-import simpleCartService from "../services/simpleCartService";
-
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
-  // Load cart from server on mount and after login (cart-updated event)
+  // Load cart when user logs in
   useEffect(() => {
     const fetchCart = async () => {
+      if (!user) {
+        dispatch({ type: "CLEAR_CART" });
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
-        const response = await simpleCartService.getCart();
-        if (
-          response.success &&
-          response.data.cart &&
-          response.data.cart.items.length > 0
-        ) {
+        const response = await cartService.getCart();
+        if (response.success && response.data.cart) {
           const cartItems = response.data.cart.items.map((item) => ({
             alien: item.alien,
             quantity: item.quantity,
@@ -93,50 +60,92 @@ export const CartProvider = ({ children }) => {
           dispatch({ type: "LOAD_CART", payload: [] });
         }
       } catch (error) {
-        console.error("Failed to fetch cart from server:", error);
+        console.error("Failed to fetch cart:", error);
         dispatch({ type: "LOAD_CART", payload: [] });
       } finally {
         setIsLoading(false);
       }
     };
-    fetchCart();
-    // Listen for cart-updated event (after login)
-    const handler = () => fetchCart();
-    window.addEventListener("cart-updated", handler);
-    return () => window.removeEventListener("cart-updated", handler);
-  }, []);
 
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state.items));
-  }, [state.items]);
+    fetchCart();
+  }, [user]);
 
   const addToCart = async (alien, quantity = 1) => {
-    // Update local state immediately for better UX
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: { alien, quantity },
-    });
+    if (!user) {
+      alert("Please login to add items to cart");
+      return;
+    }
+
     try {
-      const result = await simpleCartService.addToCart(alien._id, quantity);
-      if (!result.success) {
-        throw new Error(result.error || "Failed to add item to cart");
+      const result = await cartService.addToCart(alien._id, quantity);
+      if (result.success) {
+        // Reload cart after successful add
+        await reloadCart();
+      } else {
+        alert(result.error || "Failed to add item to cart");
       }
-      // After successful backend update, force reload cart
-      await reloadCart();
     } catch (error) {
-      console.error("Failed to add item to server cart:", error);
-      // Optionally, show error to user
+      console.error("Failed to add item to cart:", error);
       alert("Failed to add item to cart. Please try again.");
-      await reloadCart();
     }
   };
 
-  // Helper to reload cart from backend
-  const reloadCart = async () => {
-    setIsLoading(true);
+  const removeFromCart = async (alienId) => {
+    if (!user) return;
+
     try {
-      const response = await simpleCartService.getCart();
+      const result = await cartService.removeFromCart(alienId);
+      if (result.success) {
+        await reloadCart();
+      } else {
+        alert(result.error || "Failed to remove item from cart");
+      }
+    } catch (error) {
+      console.error("Failed to remove item from cart:", error);
+      alert("Failed to remove item from cart. Please try again.");
+    }
+  };
+
+  const updateQuantity = async (alienId, quantity) => {
+    if (!user) return;
+
+    try {
+      const result = await cartService.updateQuantity(alienId, quantity);
+      if (result.success) {
+        await reloadCart();
+      } else {
+        alert(result.error || "Failed to update item quantity");
+      }
+    } catch (error) {
+      console.error("Failed to update item quantity:", error);
+      alert("Failed to update item quantity. Please try again.");
+    }
+  };
+
+  const clearCart = async () => {
+    if (!user) return;
+
+    try {
+      const result = await cartService.clearCart();
+      if (result.success) {
+        dispatch({ type: "CLEAR_CART" });
+      } else {
+        alert(result.error || "Failed to clear cart");
+      }
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      alert("Failed to clear cart. Please try again.");
+    }
+  };
+
+  const reloadCart = async () => {
+    if (!user) {
+      dispatch({ type: "CLEAR_CART" });
+      return;
+    }
+
+    try {
+      const response = await cartService.getCart();
       if (response.success && response.data.cart) {
         const cartItems = response.data.cart.items.map((item) => ({
           alien: item.alien,
@@ -147,64 +156,8 @@ export const CartProvider = ({ children }) => {
         dispatch({ type: "LOAD_CART", payload: [] });
       }
     } catch (error) {
+      console.error("Failed to reload cart:", error);
       dispatch({ type: "LOAD_CART", payload: [] });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const removeFromCart = async (alienId) => {
-    dispatch({
-      type: "REMOVE_FROM_CART",
-      payload: alienId,
-    });
-    try {
-      const result = await simpleCartService.removeFromCart(alienId);
-      if (!result.success) {
-        throw new Error(result.error || "Failed to remove item from cart");
-      }
-      await reloadCart();
-    } catch (error) {
-      console.error("Failed to remove item from server cart:", error);
-      alert("Failed to remove item from cart. Please try again.");
-      await reloadCart();
-    }
-  };
-
-  const updateQuantity = async (alienId, quantity) => {
-    if (quantity <= 0) {
-      await removeFromCart(alienId);
-    } else {
-      dispatch({
-        type: "UPDATE_QUANTITY",
-        payload: { alienId, quantity },
-      });
-      try {
-        const result = await simpleCartService.updateQuantity(alienId, quantity);
-        if (!result.success) {
-          throw new Error(result.error || "Failed to update item quantity");
-        }
-        await reloadCart();
-      } catch (error) {
-        console.error("Failed to update item quantity in server cart:", error);
-        alert("Failed to update item quantity. Please try again.");
-        await reloadCart();
-      }
-    }
-  };
-
-  const clearCart = async () => {
-    dispatch({ type: "CLEAR_CART" });
-    try {
-      const result = await simpleCartService.clearCart();
-      if (!result.success) {
-        throw new Error(result.error || "Failed to clear cart");
-      }
-      await reloadCart();
-    } catch (error) {
-      console.error("Failed to clear server cart:", error);
-      alert("Failed to clear cart. Please try again.");
-      await reloadCart();
     }
   };
 
@@ -228,7 +181,7 @@ export const CartProvider = ({ children }) => {
     clearCart,
     getCartTotal,
     getCartItemCount,
-    reloadCart, // expose reloadCart for manual triggers if needed
+    reloadCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -4,8 +4,6 @@ import {
   createOrder,
   getUserOrders,
   getOrderById,
-  cancelOrder,
-  getOrderTracking,
 } from "../controllers/orderController.js";
 import { requireAuth } from "../middleware/auth.js";
 
@@ -81,15 +79,8 @@ router.get("/", requireAuth, getUserOrders);
 // GET /api/orders/:orderId - Get specific order details
 router.get("/:orderId", requireAuth, orderIdValidation, getOrderById);
 
-// PUT /api/orders/:orderId/cancel - Cancel order
-router.put("/:orderId/cancel", requireAuth, orderIdValidation, cancelOrder);
-
-// GET /api/orders/:orderId/tracking - Get order tracking information
-router.get(
-  "/:orderId/tracking",
-  requireAuth,
-  orderIdValidation,
-  getOrderTracking
-);
+// TODO: Implement these routes if needed in the future:
+// - PUT /api/orders/:orderId/cancel - Cancel order
+// - GET /api/orders/:orderId/tracking - Get order tracking information
 
 export default router;
