@@ -26,11 +26,8 @@ const OrderConfirmationPage = lazy(() =>
   import("./pages/OrderConfirmationPage")
 );
 const WishlistPage = lazy(() => import("./pages/WishlistPage"));
-const CartDebugPage = lazy(() => import("./pages/CartDebugPage"));
-const FixedCartDebugPage = lazy(() => import("./pages/FixedCartDebugPage"));
-const FixedCartPage = lazy(() => import("./pages/FixedCartPage"));
-const TestCartPage = lazy(() => import("./pages/TestCartPage"));
-const DirectDbCartTestPage = lazy(() => import("./pages/DirectDbCartTestPage"));
+// CartDebugPage removed - no longer needed
+// Debug/test pages removed - no longer needed with simple cart system
 const ImageDebugPage = lazy(() => import("./pages/ImageDebugPage"));
 const PaginationTestPage = lazy(() => import("./pages/PaginationTestPage"));
 
@@ -66,23 +63,8 @@ function App() {
                             element={<AlienDetailPage />}
                           />
                           <Route path="/cart" element={<CartPage />} />
-                          <Route
-                            path="/cart-debug"
-                            element={<CartDebugPage />}
-                          />
-                          <Route
-                            path="/fixed-cart-debug"
-                            element={<FixedCartDebugPage />}
-                          />
-                          <Route
-                            path="/fixed-cart"
-                            element={<FixedCartPage />}
-                          />
-                          <Route path="/test-cart" element={<TestCartPage />} />
-                          <Route
-                            path="/direct-db-cart"
-                            element={<DirectDbCartTestPage />}
-                          />
+                          {/* CartDebugPage route removed - no longer needed */}
+                          {/* Debug/test cart routes removed - no longer needed */}
                           <Route
                             path="/image-debug"
                             element={<ImageDebugPage />}
